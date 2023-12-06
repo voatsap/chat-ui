@@ -11,6 +11,7 @@ import {
 	SERPER_API_KEY,
 	MESSAGES_BEFORE_LOGIN,
 	YDC_API_KEY,
+	USE_LOCAL_WEBSEARCH,
 } from "$env/static/private";
 
 export const load: LayoutServerLoad = async ({ locals, depends, url }) => {
@@ -78,6 +79,7 @@ export const load: LayoutServerLoad = async ({ locals, depends, url }) => {
 				id: conv._id.toString(),
 				title: settings?.hideEmojiOnSidebar ? conv.title.replace(/\p{Emoji}/gu, "") : conv.title,
 				model: conv.model ?? defaultModel,
+				updatedAt: conv.updatedAt,
 			}))
 			.toArray(),
 		settings: {
@@ -87,7 +89,7 @@ export const load: LayoutServerLoad = async ({ locals, depends, url }) => {
 			ethicsModalAcceptedAt: settings?.ethicsModalAcceptedAt ?? null,
 			activeModel: settings?.activeModel ?? DEFAULT_SETTINGS.activeModel,
 			hideEmojiOnSidebar: settings?.hideEmojiOnSidebar ?? false,
-			searchEnabled: !!(SERPAPI_KEY || SERPER_API_KEY || YDC_API_KEY),
+			searchEnabled: !!(SERPAPI_KEY || SERPER_API_KEY || YDC_API_KEY || USE_LOCAL_WEBSEARCH),
 			customPrompts: settings?.customPrompts ?? {},
 		},
 		models: models.map((model) => ({
@@ -102,6 +104,7 @@ export const load: LayoutServerLoad = async ({ locals, depends, url }) => {
 			promptExamples: model.promptExamples,
 			parameters: model.parameters,
 			preprompt: model.preprompt,
+			multimodal: model.multimodal,
 		})),
 		oldModels,
 		user: locals.user && {
